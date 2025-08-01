@@ -104,10 +104,47 @@
             transition: all 0.3s ease;
         }
 
-        .input-field:focus+.input-underline {
-            height: 2px;
-            background:var(--accent-color-2);
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+
+
+        /* 密碼輸入框容器 */
+        .password-input-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            opacity: 0.7;
+        }
+
+        .password-toggle img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+        .password-toggle img.hidden {
+            display: none;
+        }
+
+        /* 調整密碼輸入框右邊距，為眼睛圖標留出空間 */
+        .password-input-container .input-field {
+            padding-right: 35px;
         }
 
         .login-button {
@@ -324,7 +361,13 @@
                             </div>
                             <label class="input-label">PASSWORD</label>
                         </div>
-                        <input type="password" class="input-field" required>
+                        <div class="password-input-container">
+                            <input type="password" class="input-field" required>
+                            <button type="button" class="password-toggle">
+                                <img src="img/Vector-39.png" alt="Show password" class="icon">
+                                <img src="img/Vector-38.png" alt="Hide password" class="icon hidden">
+                            </button>
+                        </div>
                         <div class="input-underline"></div>
                     </div>
 
@@ -372,7 +415,13 @@
                             </div>
                             <label class="input-label">PASSWORD</label>
                         </div>
-                        <input type="password" class="input-field" required>
+                        <div class="password-input-container">
+                            <input type="password" class="input-field" required>
+                            <button type="button" class="password-toggle">
+                                <img src="img/Vector-39.png" alt="Show password" class="icon">
+                                <img src="img/Vector-38.png" alt="Hide password" class="icon hidden">
+                            </button>
+                        </div>
                         <div class="input-underline"></div>
                     </div>
 

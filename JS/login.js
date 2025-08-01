@@ -66,4 +66,24 @@ if (window.location.search.includes('signup=1')) {
                     console.warn('Spline model loading error:', e);
                 });
             }
+            
+            // 密碼顯示/隱藏功能
+            const passwordToggles = document.querySelectorAll('.password-toggle');
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const showIcon = this.querySelector('img[src*="Vector-39"]');
+                    const hideIcon = this.querySelector('img[src*="Vector-38"]');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        showIcon.classList.add('hidden');
+                        hideIcon.classList.remove('hidden');
+                    } else {
+                        input.type = 'password';
+                        hideIcon.classList.add('hidden');
+                        showIcon.classList.remove('hidden');
+                    }
+                });
+            });
         });
