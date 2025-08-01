@@ -198,7 +198,7 @@
                         v0 *= smoothstep(r0 * 1.05, r0, len);
                         float cl = cos(ang + iTime * 2.0) * 0.5 + 0.5;
                         
-                        float a = iTime * -1.0;
+                        float a = iTime * -2.8;
                         vec2 pos = vec2(cos(a), sin(a)) * r0;
                         float d = distance(uv, pos);
                         float v1 = light2(1.5, 5.0, d);
