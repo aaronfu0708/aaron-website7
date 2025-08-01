@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    .results-section {
+      display: flex;
+      justify-content: center;
+      padding-top: 5vh;
+      padding-bottom: 5vh;
+    }
+
+    .results-card {
+      background-color: var(--color-card-bg);
+      border-radius: 16px;
+      box-shadow: -6px 4px 4px 0px rgba(0, 0, 0, 0.8);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .results-title {
+      margin: 0;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 1.2;
+      color: var(--color-text-light);
+    }
+
+    .results-summary {
+      margin: 0;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 25px;
+      color: var(--color-text-light);
+      text-align: center;
+    }
+
+    .questions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 3vh;
+      padding-bottom: 4vh;
+    }
+
+    .question-card {
+      background-color: var(--color-card-bg);
+      border-radius: 16px;
+      box-shadow: -6px 4px 4px 0px rgba(0, 0, 0, 0.8);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      max-width: 300px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title {
+      margin: 0;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--color-text-dark);
+    }
+
+    .status-tag {
+      border-radius: 20px;
+      padding: 4px 8px;
+      font-size: 12px;
+      color: var(--color-text-light);
+      min-width: 53px;
+      text-align: center;
+    }
+
+    .status-tag.incorrect {
+      background-color: var(--color-incorrect);
+    }
+
+    .status-tag.correct {
+      background-color: var(--color-correct);
+    }
+
+    .card-body {
+      color: var(--color-text-dark);
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .card-body p {
+      margin: 0 0 13px 0;
+    }
+
+    .card-body p:last-child {
+      margin-bottom: 0;
+    }
+
+
+    .card-actions {
+      margin-top: auto;
+      padding-top: 10px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+    }
+
+    .action-btn {
+      border: 2px solid var(--color-button-border);
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 96px;
+      transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+      z-index: 0;
+    }
+
+    .action-btn:hover::before {
+      left: 100%;
+    }
+
+    .action-btn > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .action-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .action-btn img {
+      width: 15px;
+      height: 15px;
+    }
+
+    .action-btn span {
+      color: var(--color-text-light);
+      font-size: 14px;
+    }
+
+    .btn-favorite {
+      background-color: var(--color-button-primary);
+    }
+
+    .btn-analysis {
+      background-color: var(--color-button-secondary);
+    }
+
+
+    .analysis-overlay {
+      position: fixed;
+      bottom: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 500px;
+      height: 80vh;
+      background-color: white;
+      border-radius: 20px 0 0 20px;
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      transition: right 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .analysis-overlay.active {
+      right: 0;
+    }
+
+    .analysis-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .analysis-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--color-text-dark);
+      margin: 0;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+          color: #666;
+    padding: 5px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      background-color: #f5f5f5;
+    }
+
+    .analysis-content {
+      flex: 1;
+      padding: 20px 30px;
+      overflow-y: auto;
+    }
+
+    .chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .message.ai {
+      background-color: #f0f0f0;
+      color: var(--color-text-dark);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .message.user {
+      background-color: var(--accent-color-2);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.placeholder {
+      background-color: #f0f0f0;
+      color: #999;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .placeholder-icon {
+      width: 16px;
+      height: 16px;
+      background-color: #999;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: white;
+    }
+
+    .analysis-input {
+      padding: 20px 30px;
+      border-top: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input-field {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input-field::placeholder {
+      color: #999;
+    }
+
+    .send-btn {
+      width: 40px;
+      height: 40px;
+      background-color: var(--accent-color-2);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .send-btn:hover {
+      background-color: var(--button-hover);
+    }
+
+    .add-icon {
+      font-size: 20px;
+      color: #666;
+      padding: 5px;
+    }
+
+    .overlay-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+
+    .overlay-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+
+    @media (max-width: 768px) {
+
+      .results-card {
+        padding: 20px;
+        max-width: 100%;
+      }
+
+      .results-title {
+        font-size: 20px;
+      }
+
+      .results-summary {
+        font-size: 14px;
+      }
+
+      .details-section {
+        padding-bottom: 30px;
+      }
+
+      .questions-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+
+      .question-card {
+        padding: 20px;
+        max-width: 100%;
+      }
+
+      .card-title {
+        font-size: 14px;
+      }
+
+      .status-tag {
+        font-size: 11px;
+        min-width: 45px;
+        padding: 3px 6px;
+      }
+
+      .card-body {
+        font-size: 14px;
+      }
+
+      .card-body p {
+        margin-bottom: 10px;
+      }
+
+      .card-actions {
+        padding-top: 8px;
+        gap: 8px;
+      }
+
+      .action-btn {
+        width: 80px;
+        padding: 8px;
+        gap: 8px;
+      }
+
+      .action-btn img {
+        width: 12px;
+        height: 12px;
+      }
+
+      .action-btn span {
+        font-size: 12px;
+      }
+
+      .analysis-overlay {
+        width: 100%;
+        max-width: 100%;
+        height: 70vh;
+        border-radius: 20px 20px 0 0;
+      }
+
+      .analysis-header {
+        padding: 15px 20px;
+      }
+
+      .analysis-title {
+        font-size: 20px;
+      }
+
+      .close-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+      }
+
+      .analysis-content {
+        padding: 15px 20px;
+      }
+
+      .message {
+        max-width: 85%;
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+
+      .analysis-input {
+        padding: 15px 20px;
+        gap: 8px;
+      }
+
+      .input-field {
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+
+      .send-btn {
+        width: 35px;
+        height: 35px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="header">
+    <header class="site-header">
+      <div class="container header-container">
+        <div class="brand-name">NoteQ</div>
+        <button class="menu-button" aria-label="Toggle menu" onclick="toggleMenu()">
+          <img src="img/Vector-18.png" alt="Menu Icon">
+        </button>
+      </div>
+    </header>
+  </section>
+  <main>
+    <div id="results" class="results-section">
+      <div class="container">
+        <div class="results-card">
+          <h2 class="results-title">挑戰結果</h2>
+          <p class="results-summary">答對題數3/5<br>熟悉度：5.0%</p>
+        </div>
+      </div>
+    </div>
+    <div id="details" class="details-section">
+      <div class="container">
+        <div class="questions-grid">
+
+          <article class="question-card">
+            <header class="card-header">
+              <h3 class="card-title">題目詳情</h3>
+              <div class="status-tag incorrect">x 錯誤</div>
+            </header>
+            <div class="card-body">
+              <p class="question-number">第 1 題</p>
+              <p class="question-text">題目:判斷101-200之間有多少個質數<br>並輸出所有質數</p>
+              <p class="answer-text">您的答案:A10個</p>
+              <p class="answer-text">正確答案:B17個</p>
+            </div>
+            <footer class="card-actions">
+              <button class="action-btn btn-favorite">
+                <img src="img/Vector-11.png" alt="">
+                <span>收藏</span>
+              </button>
+              <button class="action-btn btn-analysis" onclick="openAnalysis()">
+                <img src="img/Vector-10.png" alt="">
+                <span>解析</span>
+              </button>
+            </footer>
+          </article>
+          <article class="question-card" data-question="2">
+            <header class="card-header">
+              <h3 class="card-title">題目詳情</h3>
+              <div class="status-tag correct">✓ 正確</div>
+            </header>
+            <div class="card-body">
+              <p class="question-number">第 2 題</p>
+              <p class="question-text">題目:計算1到100的和</p>
+              <p class="answer-text">您的答案:5050</p>
+              <p class="answer-text">正確答案:5050</p>
+            </div>
+            <footer class="card-actions">
+              <button class="action-btn btn-favorite">
+                <img src="img/Vector-11.png" alt="">
+                <span>收藏</span>
+              </button>
+              <button class="action-btn btn-analysis" onclick="openAnalysis()">
+                <img src="img/Vector-10.png" alt="">
+                <span>解析</span>
+              </button>
+            </footer>
+          </article>
+
+          <article class="question-card" data-question="3">
+            <header class="card-header">
+              <h3 class="card-title">題目詳情</h3>
+              <div class="status-tag incorrect">x 錯誤</div>
+            </header>
+            <div class="card-body">
+              <p class="question-number">第 3 題</p>
+              <p class="question-text">題目:求斐波那契數列第10項</p>
+              <p class="answer-text">您的答案:34</p>
+              <p class="answer-text">正確答案:55</p>
+            </div>
+            <footer class="card-actions">
+              <button class="action-btn btn-favorite">
+                <img src="img/Vector-11.png" alt="">
+                <span>收藏</span>
+              </button>
+              <button class="action-btn btn-analysis" onclick="openAnalysis()">
+                <img src="img/Vector-10.png" alt="">
+                <span>解析</span>
+              </button>
+            </footer>
+          </article>
+
+          <article class="question-card" data-question="4">
+            <header class="card-header">
+              <h3 class="card-title">題目詳情</h3>
+              <div class="status-tag correct">✓ 正確</div>
+            </header>
+            <div class="card-body">
+              <p class="question-number">第 4 題</p>
+              <p class="question-text">題目:判斷一個數是否為回文數</p>
+              <p class="answer-text">您的答案:是</p>
+              <p class="answer-text">正確答案:是</p>
+            </div>
+            <footer class="card-actions">
+              <button class="action-btn btn-favorite">
+                <img src="img/Vector-11.png" alt="">
+                <span>收藏</span>
+              </button>
+              <button class="action-btn btn-analysis" onclick="openAnalysis()">
+                <img src="img/Vector-10.png" alt="">
+                <span>解析</span>
+              </button>
+            </footer>
+          </article>
+
+          <article class="question-card" data-question="5">
+            <header class="card-header">
+              <h3 class="card-title">題目詳情</h3>
+              <div class="status-tag incorrect">x 錯誤</div>
+            </header>
+            <div class="card-body">
+              <p class="question-number">第 5 題</p>
+              <p class="question-text">題目:求最大公約數</p>
+              <p class="answer-text">您的答案:6</p>
+              <p class="answer-text">正確答案:12</p>
+            </div>
+            <footer class="card-actions">
+              <button class="action-btn btn-favorite">
+                <img src="img/Vector-11.png" alt="">
+                <span>收藏</span>
+              </button>
+              <button class="action-btn btn-analysis" onclick="openAnalysis()">
+                <img src="img/Vector-10.png" alt="">
+                <span>解析</span>
+              </button>
+            </footer>
+          </article>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div class="overlay-backdrop" id="overlayBackdrop" onclick="closeAnalysis()"></div>
+
+  <div class="analysis-overlay" id="analysisOverlay">
+    <div class="analysis-header">
+      <h2 class="analysis-title">解析</h2>
+      <button class="close-btn" onclick="closeAnalysis()">×</button>
+    </div>
+
+    <div class="analysis-content">
+      <div class="chat-messages">
+        <div class="message ai">
+          質數是指大於1且只能被1和自己整除的正整數
+        </div>
+        <div class="message ai">
+          對於題目:判斷101-200之間有多少個質數並輸出所有質數還有什麼問題嗎?
+        </div>
+        <div class="message user">
+          你打的問題會在這裡
+        </div>
+        <div class="message placeholder">
+          <div class="placeholder-icon">+</div>
+          AI的回答在這裡
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-input">
+      <span class="add-icon">+</span>
+      <input type="text" class="input-field" placeholder="輸入問題">
+      <button class="send-btn">
+        <span>→</span>
+      </button>
+    </div>
+  </div>
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+  <div class="menu-dropdown" id="menuDropdown">
+
+    <div class="menu-header">
+    </div>
+    <a href="home.html" class="menu-item">
+      <img src="img/Vector-16.png" alt="" class="menu-item-icon">
+      <span>首頁</span>
+  </a>
+
+  <a href="note.html" class="menu-item">
+      <img src="img/Vector-15.png" alt="" class="menu-item-icon">
+      <span>筆記</span>
+  </a>
+
+  <a href="user.html" class="menu-item">
+      <img src="img/Vector-33.png" alt="" class="menu-item-icon">
+      <span>使用者</span>
+  </a>
+
+  <a href="#" class="menu-item" onclick="logout()">
+      <img src="img/Vector-30.png" alt="" class="menu-item-icon">
+      <span>登出</span>
+  </a>
+  </div>
+
+  <script src="JS/analysis.js"></script>
+  <script src="JS/main.js"></script>
+</body>
+
+</html>
