@@ -38,14 +38,37 @@ let notes = [
 
 let subjects = ["數學", "英文", "程式設計", "物理"];
 
+// 將數據暴露到全局作用域，供其他模組使用
+window.notes = notes;
+window.subjects = subjects;
+
 // 當前選中的主題
 let currentSubject = "數學";
 
 // 初始化頁面
 function initNotePage() {
     console.log('筆記頁面初始化完成');
+    
+    // 同步全局數據
+    syncGlobalData();
+    
     updateSubjectSelect();
     renderNotes();
+}
+
+// 同步全局數據
+function syncGlobalData() {
+    // 確保全局數據是最新的
+    if (window.notes) {
+        notes = window.notes;
+    }
+    if (window.subjects) {
+        subjects = window.subjects;
+    }
+    
+    // 更新全局引用
+    window.notes = notes;
+    window.subjects = subjects;
 }
 
 // 更新主題選擇器
@@ -686,28 +709,31 @@ function confirmDeleteSubjectFromDropdown(subjectValue) {
 
 // 頁面加載完成後初始化
 document.addEventListener('DOMContentLoaded', function() {
-    initNotePage();
-    
-    // 點擊外部關閉下拉選單
-    document.addEventListener('click', function(event) {
-        const container = document.querySelector('.custom-select-container');
-        const dropdown = document.getElementById('custom-dropdown');
+    // 檢查是否在筆記頁面
+    if (document.getElementById('notesGrid')) {
+        initNotePage();
         
-        if (!container.contains(event.target) && dropdown.classList.contains('active')) {
-            dropdown.classList.remove('active');
-        }
-    });
-    
-    // 綁定ESC鍵關閉模態框
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeModal();
-            closeAllActionBars();
-            // 關閉下拉選單
+        // 點擊外部關閉下拉選單
+        document.addEventListener('click', function(event) {
+            const container = document.querySelector('.custom-select-container');
             const dropdown = document.getElementById('custom-dropdown');
-            if (dropdown.classList.contains('active')) {
+            
+            if (container && dropdown && !container.contains(event.target) && dropdown.classList.contains('active')) {
                 dropdown.classList.remove('active');
             }
-        }
-    });
+        });
+        
+        // 綁定ESC鍵關閉模態框
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+                closeAllActionBars();
+                // 關閉下拉選單
+                const dropdown = document.getElementById('custom-dropdown');
+                if (dropdown && dropdown.classList.contains('active')) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+    }
 }); 
