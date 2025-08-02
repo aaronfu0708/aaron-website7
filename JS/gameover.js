@@ -931,7 +931,7 @@ window.confirmAnalysisFavorite = function() {
 
         // 顯示成功消息
         if (window.showCustomAlert) {
-            window.showCustomAlert(`解析內容已收藏到「${currentAnalysisSubject}」主題！`);
+            window.showCustomAlert(`內容已收藏到「${currentAnalysisSubject}」主題！`);
         }
     } else {
         // 添加到現有筆記
