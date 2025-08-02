@@ -246,7 +246,7 @@ function addNewNote() {
             <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <p style="margin-bottom: 15px; color: #666;">支援 Markdown 語法，請輸入筆記內容：</p>
+            <p style="margin-bottom: 15px; color: #666;">支援 Markdown 語法</p>
             <textarea class="modal-textarea" id="newNoteContent" placeholder="請輸入筆記內容...
 
 範例格式：
@@ -437,7 +437,7 @@ function editNote(element) {
             <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <p style="margin-bottom: 15px; color: #666;">支援 Markdown 語法，請編輯筆記內容：</p>
+            <p style="margin-bottom: 15px; color: #666;">支援 Markdown 語法</p>
             <textarea class="modal-textarea" id="editNoteContent">${note.content}</textarea>
         </div>
         <div class="modal-footer">
