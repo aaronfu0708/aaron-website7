@@ -133,11 +133,27 @@ window.openFavoriteModal = function(button, questionNumber) {
         }
     }
 
+    // 設置默認筆記標題
+    const noteTitleElement = document.getElementById('favorite-note-title');
+    if (noteTitleElement) {
+        noteTitleElement.value = `收藏題目 - 第${questionNumber}題`;
+    }
+
     // 更新主題選擇器
     updateFavoriteSubjectSelect();
     
     // 更新筆記選擇器
     updateFavoriteNoteSelect();
+    
+    // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+    const noteTitleInput = document.getElementById('favorite-note-title-input');
+    if (noteTitleInput) {
+        if (currentFavoriteNoteId === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
 
     // 顯示模態框
     const modal = document.getElementById('favoriteModal');
@@ -167,6 +183,12 @@ window.closeFavoriteModal = function() {
     if (modal) {
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
+    }
+    
+    // 清空筆記標題輸入欄位
+    const noteTitleElement = document.getElementById('favorite-note-title');
+    if (noteTitleElement) {
+        noteTitleElement.value = '';
     }
     
     // 重置數據
@@ -429,6 +451,16 @@ function selectFavoriteOption(value, text) {
     
     // 重新更新筆記選擇器，因為主題改變了
     updateFavoriteNoteSelect();
+    
+    // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+    const noteTitleInput = document.getElementById('favorite-note-title-input');
+    if (noteTitleInput) {
+        if (currentFavoriteNoteId === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
 }
 
 // 選擇收藏筆記選項
@@ -449,6 +481,16 @@ function selectFavoriteNoteOption(value, text) {
             option.classList.add('selected');
         }
     });
+    
+    // 控制筆記標題輸入欄位的顯示
+    const noteTitleInput = document.getElementById('favorite-note-title-input');
+    if (noteTitleInput) {
+        if (value === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
     
     // 關閉下拉選單
     document.getElementById('favorite-note-dropdown').classList.remove('active');
@@ -484,6 +526,22 @@ function addNewFavoriteSubject() {
                 // 重新更新選擇器
                 updateFavoriteSubjectSelect();
                 
+                // 重置筆記選擇為新增筆記
+                currentFavoriteNoteId = 'add_note';
+                
+                // 更新筆記選擇器
+                updateFavoriteNoteSelect();
+                
+                // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+                const noteTitleInput = document.getElementById('favorite-note-title-input');
+                if (noteTitleInput) {
+                    if (currentFavoriteNoteId === 'add_note') {
+                        noteTitleInput.style.display = 'block';
+                    } else {
+                        noteTitleInput.style.display = 'none';
+                    }
+                }
+                
                 // 顯示下拉選單
                 document.getElementById('favorite-custom-dropdown').classList.add('active');
                 
@@ -509,14 +567,19 @@ window.confirmFavorite = function() {
         if (currentFavoriteNoteId === 'add_note' || currentFavoriteNoteId === null) {
             // 新增筆記
             const questionTextElement = document.getElementById('favoriteQuestionText');
+            const noteTitleElement = document.getElementById('favorite-note-title');
             const noteContent = questionTextElement ? questionTextElement.value : `# ${currentQuestionData.question}
 **您的答案：** ${currentQuestionData.userAnswer}
 **正確答案：** ${currentQuestionData.correctAnswer}`;
 
+            // 獲取用戶輸入的標題，如果沒有輸入則使用默認標題
+            const userTitle = noteTitleElement ? noteTitleElement.value.trim() : '';
+            const noteTitle = userTitle || `收藏題目 - 第${currentQuestionData.number}題`;
+
             // 創建新的筆記對象
             const newNote = {
                 id: Date.now(), // 使用時間戳作為唯一ID
-                title: `收藏題目 - 第${currentQuestionData.number}題`,
+                title: noteTitle,
                 content: noteContent,
                 subject: currentFavoriteSubject
             };
@@ -634,11 +697,27 @@ window.openAnalysisFavoriteModal = function() {
         }
     }
     
+    // 設置默認筆記標題
+    const noteTitleElement = document.getElementById('analysis-favorite-note-title');
+    if (noteTitleElement) {
+        noteTitleElement.value = `解析內容收藏 - ${new Date().toLocaleDateString('zh-TW')}`;
+    }
+
     // 更新主題選擇器
     updateAnalysisFavoriteSubjectSelect();
     
     // 更新筆記選擇器
     updateAnalysisFavoriteNoteSelect();
+    
+    // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+    const noteTitleInput = document.getElementById('analysis-favorite-note-title-input');
+    if (noteTitleInput) {
+        if (currentAnalysisNoteId === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
     
     // 顯示模態框
     const modal = document.getElementById('analysisFavoriteModal');
@@ -661,6 +740,12 @@ window.closeAnalysisFavoriteModal = function() {
     if (modal) {
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
+    }
+    
+    // 清空筆記標題輸入欄位
+    const noteTitleElement = document.getElementById('analysis-favorite-note-title');
+    if (noteTitleElement) {
+        noteTitleElement.value = '';
     }
     
     // 重置數據
@@ -921,6 +1006,16 @@ function selectAnalysisFavoriteOption(value, text) {
     
     // 重新更新筆記選擇器，因為主題改變了
     updateAnalysisFavoriteNoteSelect();
+    
+    // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+    const noteTitleInput = document.getElementById('analysis-favorite-note-title-input');
+    if (noteTitleInput) {
+        if (currentAnalysisNoteId === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
 }
 
 // 選擇解析收藏筆記選項
@@ -941,6 +1036,16 @@ function selectAnalysisFavoriteNoteOption(value, text) {
             option.classList.add('selected');
         }
     });
+    
+    // 控制筆記標題輸入欄位的顯示
+    const noteTitleInput = document.getElementById('analysis-favorite-note-title-input');
+    if (noteTitleInput) {
+        if (value === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
     
     // 關閉下拉選單
     document.getElementById('analysis-favorite-note-dropdown').classList.remove('active');
@@ -976,6 +1081,22 @@ function addNewAnalysisFavoriteSubject() {
                 // 重新更新選擇器
                 updateAnalysisFavoriteSubjectSelect();
                 
+                // 重置筆記選擇為新增筆記
+                currentAnalysisNoteId = 'add_note';
+                
+                // 更新筆記選擇器
+                updateAnalysisFavoriteNoteSelect();
+                
+                // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+                const noteTitleInput = document.getElementById('analysis-favorite-note-title-input');
+                if (noteTitleInput) {
+                    if (currentAnalysisNoteId === 'add_note') {
+                        noteTitleInput.style.display = 'block';
+                    } else {
+                        noteTitleInput.style.display = 'none';
+                    }
+                }
+                
                 // 顯示下拉選單
                 document.getElementById('analysis-favorite-custom-dropdown').classList.add('active');
                 
@@ -1000,9 +1121,20 @@ window.confirmAnalysisFavorite = function() {
     if (currentAnalysisNoteId === 'add_note' || currentAnalysisNoteId === null) {
         // 新增筆記
         const contentTextElement = document.getElementById('analysisFavoriteContentText');
+        const noteTitleElement = document.getElementById('analysis-favorite-note-title');
         const noteContent = contentTextElement ? contentTextElement.value : `## ${currentAnalysisContent}`;
 
+        // 獲取用戶輸入的標題，如果沒有輸入則使用默認標題
+        const userTitle = noteTitleElement ? noteTitleElement.value.trim() : '';
+        const noteTitle = userTitle || `解析內容收藏 - ${new Date().toLocaleDateString('zh-TW')}`;
 
+        // 創建新的筆記對象
+        const newNote = {
+            id: Date.now(),
+            title: noteTitle,
+            content: noteContent,
+            subject: currentAnalysisSubject
+        };
 
         // 添加到筆記系統
         if (window.addNoteToSystem) {
@@ -1058,55 +1190,57 @@ ${content}`;
 
 // ==================== 通用功能 ====================
 
-// 添加筆記到系統
-window.addNoteToSystem = function(note) {
-    try {
-        // 檢查是否已經存在相同的筆記（基於內容和主題）
-        const existingNote = window.notes ? window.notes.find(n => 
-            n.content.includes(note.content.split('\n')[0]) && 
-            n.subject === (note.subject || currentFavoriteSubject)
-        ) : null;
-        
-        if (existingNote) {
-            if (window.showCustomAlert) {
-                window.showCustomAlert('此內容已經收藏過了！');
+// 添加筆記到系統（如果還沒有定義）
+if (!window.addNoteToSystem) {
+    window.addNoteToSystem = function(note) {
+        try {
+            // 檢查是否已經存在相同的筆記（基於內容和主題）
+            const existingNote = window.notes ? window.notes.find(n => 
+                n.content.includes(note.content.split('\n')[0]) && 
+                n.subject === (note.subject || currentFavoriteSubject)
+            ) : null;
+            
+            if (existingNote) {
+                if (window.showCustomAlert) {
+                    window.showCustomAlert('此內容已經收藏過了！');
+                }
+                return;
             }
-            return;
-        }
-        
-        // 如果 window.notes 不存在，創建它
-        if (!window.notes) {
-            window.notes = [];
-        }
-        
-        // 添加新筆記
-        window.notes.push(note);
-        
-        // 同步主題數據
-        const noteSubject = note.subject || currentFavoriteSubject;
-        if (!window.subjects) {
-            window.subjects = ["數學", "英文", "程式設計", "物理"];
-        }
-        if (!window.subjects.includes(noteSubject)) {
-            window.subjects.push(noteSubject);
-        }
-        
-        // 觸發筆記系統的重新渲染（如果存在）
-        if (window.renderNotes && typeof window.renderNotes === 'function') {
-            window.renderNotes();
-        }
-        
-        // 觸發主題選擇器的更新（如果存在）
-        if (window.updateSubjectSelect && typeof window.updateSubjectSelect === 'function') {
-            window.updateSubjectSelect();
-        }
+            
+            // 如果 window.notes 不存在，創建它
+            if (!window.notes) {
+                window.notes = [];
+            }
+            
+            // 添加新筆記
+            window.notes.push(note);
+            
+            // 同步主題數據
+            const noteSubject = note.subject || currentFavoriteSubject;
+            if (!window.subjects) {
+                window.subjects = ["數學", "英文", "程式設計", "物理"];
+            }
+            if (!window.subjects.includes(noteSubject)) {
+                window.subjects.push(noteSubject);
+            }
+            
+            // 觸發筆記系統的重新渲染（如果存在）
+            if (window.renderNotes && typeof window.renderNotes === 'function') {
+                window.renderNotes();
+            }
+            
+            // 觸發主題選擇器的更新（如果存在）
+            if (window.updateSubjectSelect && typeof window.updateSubjectSelect === 'function') {
+                window.updateSubjectSelect();
+            }
 
-    } catch (error) {
-        console.error('添加筆記失敗:', error);
-        if (window.showCustomAlert) {
-            window.showCustomAlert('保存失敗，請重試！');
+        } catch (error) {
+            console.error('添加筆記失敗:', error);
+            if (window.showCustomAlert) {
+                window.showCustomAlert('保存失敗，請重試！');
+            }
         }
-    }
+    };
 }
 
 // 顯示收藏成功消息
@@ -1300,11 +1434,27 @@ ${fullContent}` : '暫無對話內容';
         }
     }
     
+    // 設置默認筆記標題
+    const noteTitleElement = document.getElementById('analysis-full-favorite-note-title');
+    if (noteTitleElement) {
+        noteTitleElement.value = `完整對話收藏 - ${new Date().toLocaleDateString('zh-TW')}`;
+    }
+
     // 更新主題選擇器
     updateAnalysisFullFavoriteSubjectSelect();
     
     // 更新筆記選擇器
     updateAnalysisFullFavoriteNoteSelect();
+    
+    // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+    const noteTitleInput = document.getElementById('analysis-full-favorite-note-title-input');
+    if (noteTitleInput) {
+        if (currentAnalysisFullNoteId === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
     
     // 顯示模態框
     const modal = document.getElementById('analysisFullFavoriteModal');
@@ -1327,6 +1477,12 @@ window.closeAnalysisFullFavoriteModal = function() {
     if (modal) {
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
+    }
+    
+    // 清空筆記標題輸入欄位
+    const noteTitleElement = document.getElementById('analysis-full-favorite-note-title');
+    if (noteTitleElement) {
+        noteTitleElement.value = '';
     }
     
     // 重置數據
@@ -1586,6 +1742,16 @@ function selectAnalysisFullFavoriteOption(value, text) {
     
     // 重新更新筆記選擇器，因為主題改變了
     updateAnalysisFullFavoriteNoteSelect();
+    
+    // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+    const noteTitleInput = document.getElementById('analysis-full-favorite-note-title-input');
+    if (noteTitleInput) {
+        if (currentAnalysisFullNoteId === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
 }
 
 // 選擇完整對話收藏筆記選項
@@ -1606,6 +1772,16 @@ function selectAnalysisFullFavoriteNoteOption(value, text) {
             option.classList.add('selected');
         }
     });
+    
+    // 控制筆記標題輸入欄位的顯示
+    const noteTitleInput = document.getElementById('analysis-full-favorite-note-title-input');
+    if (noteTitleInput) {
+        if (value === 'add_note') {
+            noteTitleInput.style.display = 'block';
+        } else {
+            noteTitleInput.style.display = 'none';
+        }
+    }
     
     // 關閉下拉選單
     document.getElementById('analysis-full-favorite-note-dropdown').classList.remove('active');
@@ -1640,6 +1816,22 @@ function addNewAnalysisFullFavoriteSubject() {
                 
                 // 重新更新選擇器
                 updateAnalysisFullFavoriteSubjectSelect();
+                
+                // 重置筆記選擇為新增筆記
+                currentAnalysisFullNoteId = 'add_note';
+                
+                // 更新筆記選擇器
+                updateAnalysisFullFavoriteNoteSelect();
+                
+                // 根據當前選擇的筆記選項自動顯示或隱藏標題輸入框
+                const noteTitleInput = document.getElementById('analysis-full-favorite-note-title-input');
+                if (noteTitleInput) {
+                    if (currentAnalysisFullNoteId === 'add_note') {
+                        noteTitleInput.style.display = 'block';
+                    } else {
+                        noteTitleInput.style.display = 'none';
+                    }
+                }
                 
                 // 顯示下拉選單
                 document.getElementById('analysis-full-favorite-custom-dropdown').classList.add('active');
@@ -1687,14 +1879,19 @@ window.confirmAnalysisFullFavorite = function() {
     if (currentAnalysisFullNoteId === 'add_note' || currentAnalysisFullNoteId === null) {
         // 新增筆記
         const contentTextElement = document.getElementById('analysisFullFavoriteContentText');
+        const noteTitleElement = document.getElementById('analysis-full-favorite-note-title');
         const noteContent = contentTextElement ? contentTextElement.value : `# 完整對話記錄
 
 ${fullContent}`;
 
+        // 獲取用戶輸入的標題，如果沒有輸入則使用默認標題
+        const userTitle = noteTitleElement ? noteTitleElement.value.trim() : '';
+        const noteTitle = userTitle || `完整對話收藏 - ${new Date().toLocaleDateString('zh-TW')}`;
+
         // 創建新的筆記對象
         const newNote = {
             id: Date.now(),
-            title: `完整對話收藏 - ${new Date().toLocaleDateString('zh-TW')}`,
+            title: noteTitle,
             content: noteContent,
             subject: currentAnalysisFullSubject
         };

@@ -648,6 +648,35 @@
       font-size: 16px;
     }
 
+    /* 筆記標題輸入欄位樣式 */
+    .favorite-note-title-input {
+      margin-bottom: 20px;
+    }
+
+    .favorite-note-title-field {
+      width: 100%;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 16px;
+      line-height: 1.2;
+      color: #333;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
+    }
+
+    .favorite-note-title-field:focus {
+      outline: none;
+      border-color: #001830;
+      box-shadow: 0 4px 12px rgba(0, 24, 48, 0.1);
+    }
+
+    .favorite-note-title-field::placeholder {
+      color: #999;
+    }
+
     /* 內容編輯器樣式 */
     .content-editor {
       position: relative;
@@ -1154,6 +1183,35 @@
       font-size: 16px;
     }
 
+    /* 解析內容收藏筆記標題輸入欄位樣式 */
+    .analysis-favorite-note-title-input {
+      margin-bottom: 20px;
+    }
+
+    .analysis-favorite-note-title-field {
+      width: 100%;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 16px;
+      line-height: 1.2;
+      color: #333;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
+    }
+
+    .analysis-favorite-note-title-field:focus {
+      outline: none;
+      border-color: #001830;
+      box-shadow: 0 4px 12px rgba(0, 24, 48, 0.1);
+    }
+
+    .analysis-favorite-note-title-field::placeholder {
+      color: #999;
+    }
+
     .analysis-favorite-modal-footer {
       display: flex;
       justify-content: flex-end;
@@ -1427,6 +1485,35 @@
     .analysis-full-favorite-note-option-text {
       flex: 1;
       font-size: 16px;
+    }
+
+    /* 完整對話收藏筆記標題輸入欄位樣式 */
+    .analysis-full-favorite-note-title-input {
+      margin-bottom: 20px;
+    }
+
+    .analysis-full-favorite-note-title-field {
+      width: 100%;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 16px;
+      line-height: 1.2;
+      color: #333;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
+    }
+
+    .analysis-full-favorite-note-title-field:focus {
+      outline: none;
+      border-color: #001830;
+      box-shadow: 0 4px 12px rgba(0, 24, 48, 0.1);
+    }
+
+    .analysis-full-favorite-note-title-field::placeholder {
+      color: #999;
     }
 
     .analysis-full-favorite-modal-footer {
@@ -1883,6 +1970,39 @@
         font-size: 14px;
       }
 
+      /* 手機版筆記標題輸入欄位樣式 */
+      .favorite-note-title-input {
+        margin-bottom: 16px;
+      }
+
+      .favorite-note-title-field {
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+
+      /* 手機版解析內容收藏筆記標題輸入欄位樣式 */
+      .analysis-favorite-note-title-input {
+        margin-bottom: 16px;
+      }
+
+      .analysis-favorite-note-title-field {
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+
+      /* 手機版完整對話收藏筆記標題輸入欄位樣式 */
+      .analysis-full-favorite-note-title-input {
+        margin-bottom: 16px;
+      }
+
+      .analysis-full-favorite-note-title-field {
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+
       /* 手機版內容編輯器樣式 */
       .content-editor {
         margin-bottom: 20px;
@@ -2211,6 +2331,10 @@
             </div>
           </div>
         </div>
+        <div class="favorite-note-title-input" id="favorite-note-title-input" style="display: none;">
+          <label for="favorite-note-title" class="favorite-filter-label">筆記標題</label>
+          <input type="text" id="favorite-note-title" class="favorite-note-title-field" placeholder="請輸入筆記標題..." value="">
+        </div>
       </div>
       <div class="favorite-modal-footer">
         <button class="favorite-modal-btn favorite-modal-btn-secondary" onclick="closeFavoriteModal()">取消</button>
@@ -2283,6 +2407,10 @@
             </div>
           </div>
         </div>
+        <div class="analysis-favorite-note-title-input" id="analysis-favorite-note-title-input" style="display: none;">
+          <label for="analysis-favorite-note-title" class="analysis-favorite-filter-label">筆記標題</label>
+          <input type="text" id="analysis-favorite-note-title" class="analysis-favorite-note-title-field" placeholder="請輸入筆記標題..." value="">
+        </div>
       </div>
       <div class="analysis-favorite-modal-footer">
         <button class="analysis-favorite-modal-btn analysis-favorite-modal-btn-secondary" onclick="closeAnalysisFavoriteModal()">取消</button>
@@ -2334,6 +2462,10 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="analysis-full-favorite-note-title-input" id="analysis-full-favorite-note-title-input" style="display: none;">
+          <label for="analysis-full-favorite-note-title" class="analysis-full-favorite-filter-label">筆記標題</label>
+          <input type="text" id="analysis-full-favorite-note-title" class="analysis-full-favorite-note-title-field" placeholder="請輸入筆記標題..." value="">
         </div>
       </div>
       <div class="analysis-full-favorite-modal-footer">

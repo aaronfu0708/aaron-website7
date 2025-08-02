@@ -38,6 +38,50 @@ window.subjects = subjects;
 window.renderNotes = renderNotes;
 window.updateSubjectSelect = updateSubjectSelect;
 
+// 暴露筆記系統的添加函數
+window.addNoteToSystem = function(note) {
+    try {
+        // 檢查是否已經存在相同的筆記（基於內容和主題）
+        const existingNote = notes.find(n => 
+            n.content.includes(note.content.split('\n')[0]) && 
+            n.subject === note.subject
+        );
+        
+        if (existingNote) {
+            if (window.showCustomAlert) {
+                window.showCustomAlert('此內容已經收藏過了！');
+            } else {
+                alert('此內容已經收藏過了！');
+            }
+            return;
+        }
+        
+        // 添加新筆記
+        notes.push(note);
+        window.notes = notes;
+        
+        // 同步主題數據
+        if (!subjects.includes(note.subject)) {
+            subjects.push(note.subject);
+            window.subjects = subjects;
+        }
+        
+        // 如果當前在筆記頁面，重新渲染
+        if (document.getElementById('notesGrid')) {
+            updateSubjectSelect();
+            renderNotes();
+        }
+        
+    } catch (error) {
+        console.error('添加筆記失敗:', error);
+        if (window.showCustomAlert) {
+            window.showCustomAlert('保存失敗，請重試！');
+        } else {
+            alert('保存失敗，請重試！');
+        }
+    }
+};
+
 // 暴露Markdown解析函數（如果全局還沒有定義）
 if (typeof window.parseMarkdown === 'undefined') {
     window.parseMarkdown = parseMarkdown;
@@ -70,6 +114,27 @@ function syncGlobalData() {
     // 更新全局引用
     window.notes = notes;
     window.subjects = subjects;
+    
+    // 確保數據是數組格式
+    if (!Array.isArray(notes)) {
+        notes = [];
+        window.notes = notes;
+    }
+    if (!Array.isArray(subjects)) {
+        subjects = ["數學", "英文", "程式設計", "物理"];
+        window.subjects = subjects;
+    }
+    
+    // 如果沒有主題，設置默認主題
+    if (subjects.length === 0) {
+        subjects = ["數學", "英文", "程式設計", "物理"];
+        window.subjects = subjects;
+    }
+    
+    // 如果當前主題不在主題列表中，切換到第一個主題
+    if (!subjects.includes(currentSubject)) {
+        currentSubject = subjects[0];
+    }
 }
 
 // 更新主題選擇器
@@ -751,7 +816,10 @@ function confirmDeleteSubjectFromDropdown(subjectValue) {
 document.addEventListener('DOMContentLoaded', function() {
     // 檢查是否在筆記頁面
     if (document.getElementById('notesGrid')) {
-        initNotePage();
+        // 延遲初始化，確保所有數據都已加載
+        setTimeout(() => {
+            initNotePage();
+        }, 100);
         
         // 點擊外部關閉下拉選單
         document.addEventListener('click', function(event) {
@@ -775,6 +843,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
+});
+
+// 頁面可見性變化時重新同步數據（當用戶從其他頁面返回時）
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden && document.getElementById('notesGrid')) {
+        // 頁面變為可見時，重新同步數據
+        setTimeout(() => {
+            syncGlobalData();
+            updateSubjectSelect();
+            renderNotes();
+        }, 100);
     }
 });
 
