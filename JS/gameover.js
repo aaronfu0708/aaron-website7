@@ -1002,13 +1002,7 @@ window.confirmAnalysisFavorite = function() {
         const contentTextElement = document.getElementById('analysisFavoriteContentText');
         const noteContent = contentTextElement ? contentTextElement.value : `## ${currentAnalysisContent}`;
 
-        // 創建新的筆記對象
-        const newNote = {
-            id: Date.now(),
-            title: `解析收藏 - ${new Date().toLocaleDateString('zh-TW')}`,
-            content: noteContent,
-            subject: currentAnalysisSubject
-        };
+
 
         // 添加到筆記系統
         if (window.addNoteToSystem) {
