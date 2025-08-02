@@ -444,7 +444,7 @@ function addNewFavoriteSubject() {
                 
                 // 顯示成功消息
                 if (window.showCustomAlert) {
-                    window.showCustomAlert(`新主題「${trimmedSubject}」已創建！`);
+                    window.showCustomAlert(`主題「${trimmedSubject}」新增成功！`);
                 }
             }
         });
