@@ -4,35 +4,27 @@
 let notes = [
     {
         id: 1,
-        title: "主題:數學",
+        title: "質數判斷練習",
         content: "題目:判斷101-200之間有多少個質數\n並輸出所有質數\n正確答案:17個\n解析:質數是指大於1且只能被1和自己整除的正整數。在101-200之間，共有17個質數：101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 191, 193, 197, 199。",
-        subject: "數學",
-        type: "我的筆記",
-        createdAt: "2024-01-15"
+        subject: "數學"
     },
     {
         id: 2,
-        title: "主題:數學",
+        title: "二次方程式求解",
         content: "題目:求解二次方程式 x² - 5x + 6 = 0\n\n正確答案:x = 2 或 x = 3\n\n解析:使用因式分解法，將 x² - 5x + 6 分解為 (x - 2)(x - 3) = 0\n因此 x - 2 = 0 或 x - 3 = 0\n所以 x = 2 或 x = 3\n\n驗證:\n當 x = 2 時：2² - 5×2 + 6 = 4 - 10 + 6 = 0 ✓\n當 x = 3 時：3² - 5×3 + 6 = 9 - 15 + 6 = 0 ✓",
-        subject: "數學",
-        type: "我的筆記",
-        createdAt: "2024-01-16"
+        subject: "數學"
     },
     {
         id: 3,
-        title: "主題:數學",
+        title: "圓的面積與周長計算",
         content: "題目:計算圓的面積和周長，已知半徑 r = 5\n\n正確答案:\n面積 = 25π ≈ 78.54\n周長 = 10π ≈ 31.42\n\n解析:\n圓的面積公式：A = πr²\n圓的周長公式：C = 2πr\n\n計算過程：\n面積 = π × 5² = π × 25 = 25π ≈ 78.54\n周長 = 2π × 5 = 10π ≈ 31.42\n\n注意：π ≈ 3.14159",
-        subject: "數學",
-        type: "我的筆記",
-        createdAt: "2024-01-17"
+        subject: "數學"
     },
     {
         id: 4,
-        title: "主題:數學",
+        title: "線性方程組求解",
         content: "題目:求解線性方程組\n2x + 3y = 8\n4x - y = 7\n\n正確答案:x = 2, y = 1\n\n解析:使用代入法或消元法求解\n\n方法一：代入法\n從第二個方程式：y = 4x - 7\n代入第一個方程式：2x + 3(4x - 7) = 8\n2x + 12x - 21 = 8\n14x = 29\nx = 2\n代入 y = 4×2 - 7 = 1\n\n驗證：\n2×2 + 3×1 = 4 + 3 = 7 ✓\n4×2 - 1 = 8 - 1 = 7 ✓",
-        subject: "數學",
-        type: "我的筆記",
-        createdAt: "2024-01-18"
+        subject: "數學"
     }
 ];
 
@@ -42,12 +34,21 @@ let subjects = ["數學", "英文", "程式設計", "物理"];
 window.notes = notes;
 window.subjects = subjects;
 
+// 暴露必要的函數給全局使用
+window.renderNotes = renderNotes;
+window.updateSubjectSelect = updateSubjectSelect;
+
+// 暴露Markdown解析函數（如果全局還沒有定義）
+if (typeof window.parseMarkdown === 'undefined') {
+    window.parseMarkdown = parseMarkdown;
+}
+
 // 當前選中的主題
 let currentSubject = "數學";
 
 // 初始化頁面
 function initNotePage() {
-    console.log('筆記頁面初始化完成');
+    // 筆記頁面初始化完成
     
     // 同步全局數據
     syncGlobalData();
@@ -162,7 +163,7 @@ function cleanTextContent(text) {
         .trim();                 // 移除首尾空白
 }
 
-// 簡單的Markdown解析函數
+// 本地Markdown解析函數
 function parseMarkdown(text) {
     return text
         // 標題
@@ -177,6 +178,8 @@ function parseMarkdown(text) {
         .replace(/`(.*?)`/g, '<code>$1</code>')
         // 列表
         .replace(/^- (.*$)/gim, '<li>$1</li>')
+        // 分隔線
+        .replace(/^---$/gim, '<hr>')
         // 換行
         .replace(/\n/g, '<br>');
 }
@@ -192,7 +195,6 @@ function createNoteCard(note) {
     
     article.innerHTML = `
         <div class="card-content">
-            <p class="note-meta">${note.type}</p>
             <h3 class="note-title">${note.title}</h3>
             <div class="note-text">${parsedContent}</div>
         </div>
@@ -246,8 +248,14 @@ function addNewNote() {
             <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <p style="margin-bottom: 15px; color: #666;">支援 Markdown 語法</p>
-            <textarea class="modal-textarea" id="newNoteContent" placeholder="請輸入筆記內容...
+            <div style="margin-bottom: 15px;">
+                <label for="newNoteTitle" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">筆記名稱：</label>
+                <input type="text" id="newNoteTitle" placeholder="請輸入筆記名稱" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="newNoteContent" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">筆記內容：</label>
+                <p style="margin-bottom: 10px; color: #666; font-size: 14px;">支援 Markdown 語法</p>
+                <textarea class="modal-textarea" id="newNoteContent" placeholder="請輸入筆記內容...
 
 範例格式：
 # 題目標題
@@ -266,6 +274,7 @@ function addNewNote() {
 - 標題：# ## ###
 - 列表：- 項目
 - 程式碼：\`code\`"></textarea>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="modal-btn modal-btn-secondary" onclick="closeModal()">取消</button>
@@ -278,13 +287,21 @@ function addNewNote() {
 
 // 儲存新筆記
 function saveNewNote() {
+    const titleInput = document.getElementById('newNoteTitle');
     const textarea = document.getElementById('newNoteContent');
-    if (!textarea) {
-        console.error('找不到文本區域元素');
+    
+    if (!titleInput || !textarea) {
+        console.error('找不到必要的元素');
         return;
     }
     
+    const title = titleInput.value.trim();
     const content = textarea.value.trim();
+    
+    if (!title) {
+        safeAlert('請輸入筆記名稱！');
+        return;
+    }
     
     if (!content) {
         safeAlert('請輸入筆記內容！');
@@ -293,11 +310,9 @@ function saveNewNote() {
     
     const newNote = {
         id: Date.now(),
-        title: `主題:${currentSubject}`,
+        title: title,
         content: content,
-        subject: currentSubject,
-        type: "我的筆記",
-        createdAt: new Date().toISOString().split('T')[0]
+        subject: currentSubject
     };
     
     notes.push(newNote);
@@ -339,11 +354,18 @@ function moveNote(element) {
         </div>
         <div class="modal-body">
             <p style="margin-bottom: 15px;">選擇要搬移到的主題：</p>
-            <div style="position: relative; margin-bottom: 15px;">
-                <select id="moveSubjectSelect" class="custom-select" style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: var(--select-bg); color: black; appearance: none; -webkit-appearance: none; -moz-appearance: none; cursor: pointer;">
-                    ${subjects.map(subject => `<option value="${subject}" ${subject === note.subject ? 'selected' : ''}>${subject}</option>`).join('')}
-                </select>
-                <img src="img/Vector-17.png" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; pointer-events: none;">
+            <div class="move-custom-select-container" style="margin-bottom: 15px;">
+                <div class="move-custom-select" id="move-custom-select" onclick="toggleMoveDropdown()">
+                    <span id="move-selected-option-text">${note.subject}</span>
+                    <img src="img/Vector-17.png" class="move-select-arrow">
+                </div>
+                <div class="move-custom-dropdown" id="move-custom-dropdown">
+                    ${subjects.map(subject => `
+                        <button class="move-dropdown-option ${subject === note.subject ? 'selected' : ''}" data-value="${subject}" onclick="selectMoveOption('${subject}')">
+                            <span class="move-option-text">${subject}</span>
+                        </button>
+                    `).join('')}
+                </div>
             </div>
             <p style="color: #666; font-size: 14px;">或輸入新主題名稱：</p>
             <input type="text" id="newSubjectInput" placeholder="輸入新主題名稱" style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
@@ -360,7 +382,7 @@ function moveNote(element) {
 
 // 確認搬移筆記
 function confirmMoveNote() {
-    const select = document.getElementById('moveSubjectSelect');
+    const selectedText = document.getElementById('move-selected-option-text');
     const input = document.getElementById('newSubjectInput');
     const noteCard = document.querySelector('.note-card[data-note-id]');
     const noteId = parseInt(noteCard.dataset.noteId);
@@ -368,7 +390,7 @@ function confirmMoveNote() {
     
     if (!note) return;
     
-    let newSubject = input.value.trim() || select.value;
+    let newSubject = input.value.trim() || selectedText.textContent;
     
     if (!newSubject) {
         safeAlert('請選擇或輸入主題名稱！');
@@ -381,7 +403,6 @@ function confirmMoveNote() {
     }
     
     note.subject = newSubject;
-    note.title = `主題:${newSubject}`;
     renderNotes();
     closeModal();
     safeAlert(`筆記已搬移到 ${newSubject} 主題！`);
@@ -400,14 +421,12 @@ function viewNote(element) {
     
     const modal = createModal(`
         <div class="modal-header">
-            <h2 class="modal-title">${note.title}</h2>
+            <h2 class="modal-title">查看筆記</h2>
             <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
             <div style="margin-bottom: 20px;">
-                <p><strong>主題：</strong>${note.subject}</p>
-                <p><strong>類型：</strong>${note.type}</p>
-                <p><strong>建立時間：</strong>${note.createdAt}</p>
+                <p><strong>${note.title}</strong></p>
             </div>
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.6;">
@@ -437,8 +456,15 @@ function editNote(element) {
             <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <p style="margin-bottom: 15px; color: #666;">支援 Markdown 語法</p>
-            <textarea class="modal-textarea" id="editNoteContent">${note.content}</textarea>
+            <div style="margin-bottom: 15px;">
+                <label for="editNoteTitle" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">筆記名稱：</label>
+                <input type="text" id="editNoteTitle" value="${note.title}" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="editNoteContent" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">筆記內容：</label>
+                <p style="margin-bottom: 10px; color: #666; font-size: 14px;">支援 Markdown 語法</p>
+                <textarea class="modal-textarea" id="editNoteContent">${note.content}</textarea>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="modal-btn modal-btn-secondary" onclick="closeModal()">取消</button>
@@ -452,8 +478,21 @@ function editNote(element) {
 
 // 儲存編輯的筆記
 function saveEditNote() {
+    const titleInput = document.getElementById('editNoteTitle');
     const textarea = document.getElementById('editNoteContent');
+    
+    if (!titleInput || !textarea) {
+        console.error('找不到必要的元素');
+        return;
+    }
+    
+    const title = titleInput.value.trim();
     const content = textarea.value.trim();
+    
+    if (!title) {
+        safeAlert('請輸入筆記名稱！');
+        return;
+    }
     
     if (!content) {
         safeAlert('請輸入筆記內容！');
@@ -465,6 +504,7 @@ function saveEditNote() {
     const note = notes.find(n => n.id === noteId);
     
     if (note) {
+        note.title = title;
         note.content = content;
         renderNotes();
         closeModal();
@@ -736,4 +776,33 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-}); 
+});
+
+// 搬移模態框下拉選單功能
+function toggleMoveDropdown() {
+    const dropdown = document.getElementById('move-custom-dropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('active');
+    }
+}
+
+function selectMoveOption(value) {
+    const selectedText = document.getElementById('move-selected-option-text');
+    const dropdown = document.getElementById('move-custom-dropdown');
+    
+    if (selectedText) {
+        selectedText.textContent = value;
+    }
+    
+    // 更新選中狀態
+    const options = dropdown.querySelectorAll('.move-dropdown-option');
+    options.forEach(option => {
+        option.classList.remove('selected');
+        if (option.dataset.value === value) {
+            option.classList.add('selected');
+        }
+    });
+    
+    // 關閉下拉選單
+    dropdown.classList.remove('active');
+}

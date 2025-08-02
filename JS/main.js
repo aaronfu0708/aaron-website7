@@ -55,6 +55,22 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   initPageSpecific();
+  
+  // 防止雙擊縮放 - 只針對按鈕和輸入框
+  document.addEventListener('touchstart', function(event) {
+    const target = event.target;
+    const isInteractiveElement = target.tagName === 'BUTTON' || 
+                                target.tagName === 'INPUT' || 
+                                target.tagName === 'TEXTAREA' || 
+                                target.tagName === 'SELECT' ||
+                                target.closest('.custom-select') ||
+                                target.closest('.menu-button') ||
+                                target.closest('.action-item');
+    
+    if (isInteractiveElement && event.touches.length > 1) {
+      event.preventDefault();
+    }
+  }, { passive: false });
 });
 
 // 自定義對話框系統
@@ -235,10 +251,10 @@ function logout() {
       
       // 使用更可靠的跳轉方式
       try {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
       } catch (error) {
         // 如果直接跳轉失敗，嘗試其他方式
-        window.location.replace('login.html');
+        window.location.replace('index.html');
       }
     },
     () => {

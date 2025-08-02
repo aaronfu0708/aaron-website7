@@ -44,8 +44,31 @@
     padding: 0;
 }
 
+/* 防止輸入框縮放 - 只針對特定元素 */
+input, textarea, select {
+    font-size: 16px; /* iOS 不會縮放 16px 以上的字體 */
+}
+
+/* 防止選中文字 */
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input, textarea {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+/* 只對按鈕和下拉選單防止雙擊縮放 */
+button, .menu-button, .custom-select, .custom-dropdown-option, .action-item, .add-plus {
+    touch-action: manipulation;
+}
+
 body {
-    background: linear-gradient(180deg, var(--brand-color-1) 29.33%, var(--brand-color-2) 58.17%);
+    background: linear-gradient(180deg, var(--brand-color-1) 29.33%, var(--brand-color-2) 70.67%);
     background-attachment: fixed;
     background-size: cover;
     background-position: center;

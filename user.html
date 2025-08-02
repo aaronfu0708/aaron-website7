@@ -155,6 +155,25 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.topics-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.topics-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.topics-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.topics-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .topic-item {
@@ -450,7 +469,47 @@
          </div>
         
         <div id="familiarity-tab" class="tab-panel">
-          <div class="topics-list">
+          <div class="topics-list" style="max-height: 300px; overflow-y: auto;">
+            <div class="topic-item">
+              <h2 class="topic-title">累了</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">多益</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">數學</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">物理</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
             <div class="topic-item">
               <h2 class="topic-title">累了</h2>
               <div class="progress-container">
