@@ -493,7 +493,7 @@ function viewNote(element) {
             <div style="margin-bottom: 20px;">
                 <p><strong>${note.title}</strong></p>
             </div>
-            <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.6;">
                 ${parsedContent}
             </div>
