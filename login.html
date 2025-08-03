@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.38/build/spline-viewer.js"></script>
+    <style>
+        body{
+            overflow:hidden;
+        }
+        .login-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 ;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .login-title {
+            color: var(--text-color);
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-align: center;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .input-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .input-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-icon .icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .input-label {
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .input-field {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+            padding: 8px 0;
+            width: 100%;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-underline {
+            height: 1px;
+            background-color: var(--text-color);
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+
+
+        /* 密碼輸入框容器 */
+        .password-input-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            opacity: 0.7;
+        }
+
+        .password-toggle img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+        .password-toggle img.hidden {
+            display: none;
+        }
+
+        /* 調整密碼輸入框右邊距，為眼睛圖標留出空間 */
+        .password-input-container .input-field {
+            padding-right: 35px;
+        }
+
+        .login-button {
+            background-color: #d3d3d3;
+            color: var(--primary-text-dark);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 15px 30px;
+            border: none;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-button:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link-text {
+            color: #282828;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .link-text:hover {
+            color: #66BB6A;
+        }
+
+        .auth-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 20vw;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spline-container {
+            position: absolute;
+            top: 0;
+            right: 10vw;
+            width: 50%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .spline-container spline-viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 40px;
+            position: relative;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .form-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-section.hidden {
+            display: none;
+        }
+
+        .auth-title {
+            color: var(--text-color);
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-align: center;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-button {
+            background-color: #d3d3d3;
+            color: var(--primary-text-dark);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 15px 30px;
+            border-radius: 16px;
+            border: none;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-button:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .switch-link {
+            text-align: right;
+            align-self: flex-end;
+        }
+
+        .forgot-password {
+            text-align: right;
+            align-self: flex-end;
+            margin-top: -5px;
+        }
+
+
+        @media (max-width: 768px) {
+            body{
+                overflow: visible;
+            }
+            .login-title {
+                font-size: 20px;
+            }
+
+            .input-group {
+                gap:5px;
+            }
+
+            .input-icon {
+                width: 25px;
+                height: 18px;
+            }
+            
+            .auth-main {
+                padding: 0 10vw;
+                justify-content: center;
+                overflow: hidden;
+            }
+
+            .spline-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section id="header">
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="brand-name">NoteQ</div>
+                <nav class="auth-nav">
+                    <a href="#" class="btn-signup" id="signupBtn">Sign up</a>
+                    <a href="#" class="btn-login" id="loginBtn">Login</a>
+                </nav>
+            </div>
+        </header>
+    </section>
+
+    <main class="auth-main">
+        <div class="auth-container">
+            <div class="form-section" id="loginSection">
+                <h1 class="auth-title">LOGIN</h1>
+
+                <form class="auth-form">
+                    <div class="input-group">
+                        <div class="input-header">
+                            <div class="input-icon">
+                                <img src="img/Vector-6.png" alt="Email icon" class="icon">
+                            </div>
+                            <label class="input-label">EMAIL</label>
+                        </div>
+                        <input type="email" class="input-field" required>
+                        <div class="input-underline"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header">
+                            <div class="input-icon">
+                                <img src="img/Vector-7.png" alt="Password icon" class="icon">
+                            </div>
+                            <label class="input-label">PASSWORD</label>
+                        </div>
+                        <div class="password-input-container">
+                            <input type="password" class="input-field" required>
+                            <button type="button" class="password-toggle">
+                                <img src="img/Vector-39.png" alt="Show password" class="icon">
+                                <img src="img/Vector-38.png" alt="Hide password" class="icon hidden">
+                            </button>
+                        </div>
+                        <div class="input-underline"></div>
+                    </div>
+
+                    <div class="forgot-password">
+                        <a href="#" class="link-text">忘記密碼？</a>
+                    </div>
+
+                    <button type="submit" class="auth-button">LOGIN</button>
+                </form>
+
+                <div class="switch-link">
+                    <a href="#" class="link-text" id="showSignup">還沒有帳號？註冊</a>
+                </div>
+            </div>
+            <div class="form-section hidden" id="signupSection">
+                <h1 class="auth-title">SIGN UP</h1>
+
+                <form class="auth-form">
+                    <div class="input-group">
+                        <div class="input-header">
+                            <div class="input-icon">
+                                <img src="img/Vector-36.png" alt="Username icon" class="icon">
+                            </div>
+                            <label class="input-label">USERNAME</label>
+                        </div>
+                        <input type="text" class="input-field" required>
+                        <div class="input-underline"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header">
+                            <div class="input-icon">
+                                <img src="img/Vector-6.png" alt="Email icon" class="icon">
+                            </div>
+                            <label class="input-label">EMAIL</label>
+                        </div>
+                        <input type="email" class="input-field" required>
+                        <div class="input-underline"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header">
+                            <div class="input-icon">
+                                <img src="img/Vector-7.png" alt="Password icon" class="icon">
+                            </div>
+                            <label class="input-label">PASSWORD</label>
+                        </div>
+                        <div class="password-input-container">
+                            <input type="password" class="input-field" required>
+                            <button type="button" class="password-toggle">
+                                <img src="img/Vector-39.png" alt="Show password" class="icon">
+                                <img src="img/Vector-38.png" alt="Hide password" class="icon hidden">
+                            </button>
+                        </div>
+                        <div class="input-underline"></div>
+                    </div>
+
+                    <button type="submit" class="auth-button">SIGN UP</button>
+                </form>
+
+                <div class="switch-link">
+                    <a href="#" class="link-text" id="showLogin">已經有帳號了？登入</a>
+                </div>
+            </div>
+        </div>
+        <div class="spline-container">
+            <spline-viewer 
+                loading-anim-type="none" 
+                loading-anim-duration="0"
+                url="https://prod.spline.design/WZMDq8J83oGNSegR/scene.splinecode"
+                style="width: 100%; height: 100%; min-width: 400px; min-height: 600px;">
+            </spline-viewer>
+        </div>
+    </main>
+
+    <script src="JS/login.js"></script>
+</body>
+
+</html>

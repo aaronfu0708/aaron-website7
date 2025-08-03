@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    .game-select-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 75vh;
+      padding: 20px 0;
+    }
+
+    .page-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .difficulty-hub {
+      position: relative;
+      width: 600px;
+      height: 500px;
+      margin-left: 20vw;
+    }
+
+    .hub-outline {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .hub-title {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-60%, 0%);
+      margin: 0;
+      color: var(--text-color);
+      font-size: 20px;
+      text-align: center;
+      letter-spacing: 10px;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .difficulty-button {
+      position: absolute;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 13px;
+      padding: 20px 25px;
+      background: linear-gradient(91deg, var(--button-bg) 41.35%, var(--button-bg-light) 100.01%);
+      width: 150px;
+      height: 65px;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+      border: 1px solid var(--card-border);
+      transform-origin: center;
+      overflow: hidden;
+    }
+
+    .difficulty-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+      z-index: 0;
+    }
+
+    .difficulty-button:hover::before {
+      left: 100%;
+    }
+
+    .difficulty-button > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .difficulty-button:hover {
+      transform: scale(1.05);
+    }
+
+    .difficulty-button.selected {
+      background:#57588c;
+    }
+
+    .difficulty-button img {
+      width: 24px;
+      height: 24px;
+      filter: brightness(0) invert(1);
+    }
+
+    .difficulty-button span {
+      font-size: 16px;
+      letter-spacing: 6px;
+      color: var(--text-color);
+    }
+
+    .difficulty-test {
+      top: 38%;
+      left: -28%;
+    }
+
+    .difficulty-master {
+      bottom: -5%;
+      left: -20%;
+    }
+
+    .difficulty-beginner {
+      top: -5.5%;
+      right: -5%;
+    }
+
+    .difficulty-intermediate {
+      top: 38.5%;
+      right: -18%;
+    }
+
+    .difficulty-advanced {
+      bottom: -5%;
+      right: -29%;
+    }
+
+    .topic-input {
+      position: absolute;
+      top: 23%;
+      left: 50%;
+      transform: translateX(50%);
+      display: flex;
+      align-items: center;
+      width: 400px;
+      height: 65px;
+      padding: 25px;
+      background-color: var(--color-card-bg);
+      border-radius: 50px;
+      box-shadow: 0px 0px 16px 0px var(--shadow-white);
+      border: 2px solid transparent;
+      font-size: 16px;
+      letter-spacing: 2px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .topic-input:focus {
+      transform: translateX(50%) scale(1.04);
+    }
+
+    .topic-input::placeholder {
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+
+    .challenge-start-form {
+      position: absolute;
+      top: 55%;
+      left: 57%;
+      transform: translateX(50%);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      width: 320px;
+      height: 65px;
+      padding: 15px 20px;
+      background-color: var(--color-card-bg);
+      border-radius: 50px;
+      box-shadow: 0px 0px 16px 0px var(--shadow-white);
+      border: 2px solid transparent;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .challenge-start-form:focus-within {
+      transform: translateX(50%) scale(1.04);
+    }
+
+    .question-count-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      letter-spacing: 2px;
+      color: var(--text-color);
+      width: 120px;
+      text-align: left;
+      flex: 1;
+    }
+
+    .question-count-input::placeholder {
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .question-count-input::-webkit-outer-spin-button,
+    .question-count-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+
+    .start-button {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 25px;
+      background: var(--accent-color-2);
+      border-radius: 50px;
+      box-shadow: 0px 4px 16px 0px var(--shadow-white);
+      transition: transform 0.3s ease;
+      overflow: hidden;
+      border: none;
+    }
+
+    .start-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+      z-index: 0;
+    }
+
+    .start-button:hover::before {
+      left: 100%;
+    }
+
+    .start-button > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .start-button:hover {
+      transform: scale(1.05);
+    }
+
+    .start-button span {
+      white-space: nowrap;
+      font-size: 15px;
+    }
+
+    .start-button img {
+      width: 12px;
+      height: 12px;
+    }
+
+
+    @media (max-width: 768px) {
+      .game-select-section {
+        min-height: auto;
+        height: 100vh;
+        padding: 20px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .page-container {
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        width: 100%;
+        max-width: 350px;
+      }
+
+      .difficulty-hub {
+        position: relative;
+        width: 100%;
+        max-width: 180px;
+        height: 280px;
+        margin-left: 0;
+
+      }
+
+      .hub-title {
+        font-size: 10px;
+        letter-spacing: 6px;
+        transform: translate(-53%, -20%);
+      }
+
+      .difficulty-button {
+        position: absolute;
+        width: 85px;
+        height: 40px;
+        padding: 8px 10px;
+        gap: 6px;
+      }
+
+      .difficulty-button span {
+        font-size: 11px;
+        letter-spacing: 2px;
+      }
+
+      .difficulty-button img {
+        width: 12px;
+        height: 12px;
+      }
+
+      .difficulty-test {
+        top: 41%;
+        left: -51.5%;
+      }
+
+      .difficulty-master {
+        bottom: 17%;
+        left: -43%;
+      }
+
+      .difficulty-beginner {
+        top: 16%;
+        right: -29%;
+      }
+
+      .difficulty-intermediate {
+        top: 40%;
+        right: -42%;
+      }
+
+      .difficulty-advanced {
+        bottom: 17.5%;
+        right: -52%;
+      }
+
+      .topic-input {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-width: 320px;
+        height: 55px;
+        padding: 10px 20px;
+        font-size: 14px;
+        margin-top: 6vh;
+        color: #fff;
+      }
+
+      .topic-input:focus {
+        transform: scale(1.02);
+      }
+
+      .challenge-start-form {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-width: 320px;
+        height: 55px;
+        padding: 12px 15px;
+        gap: 10px;
+      }
+
+      .challenge-start-form:focus-within {
+        transform: scale(1.02);
+      }
+
+      .question-count-input {
+        font-size: 14px;
+        letter-spacing: 2px;
+        width: 100px;
+        padding: 12px 5px;
+
+      }
+
+      .start-button {
+        padding: 12px 20px;
+      }
+
+      .start-button span {
+        font-size: 13px;
+        letter-spacing: 1.5px;
+      }
+
+      .start-button img {
+        width: 10px;
+        height: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="header">
+    <header class="site-header">
+      <div class="container header-container">
+        <div class="brand-name">NoteQ</div>
+        <button class="menu-button" aria-label="Toggle menu" onclick="toggleMenu()">
+          <img src="img/Vector-18.png" alt="Menu Icon">
+        </button>
+      </div>
+    </header>
+  </section>
+  <main id="game-select" class="game-select-section">
+    <div class="page-container">
+      <input type="text" class="topic-input" placeholder="輸入主題">
+
+      <div class="difficulty-hub">
+        <img src="img/Vector-19.png" class="hub-outline">
+        <h2 class="hub-title">難度選擇</h2>
+
+        <a href="#game-select" class="difficulty-button difficulty-test">
+          <img src="img/Vector-5.png" alt="">
+          <span>測驗</span>
+        </a>
+        <a href="#game-select" class="difficulty-button difficulty-master">
+          <img src="img/Vector-4.png" alt="">
+          <span>大師</span>
+        </a>
+        <a href="#game-select" class="difficulty-button difficulty-beginner">
+          <img src="img/Vector.png" alt="">
+          <span>初級</span>
+        </a>
+        <a href="#game-select" class="difficulty-button difficulty-intermediate">
+          <img src="img/Vector-2.png" alt="">
+          <span>中級</span>
+        </a>
+        <a href="#game-select" class="difficulty-button difficulty-advanced">
+          <img src="img/Vector-3.png" alt="">
+          <span>高級</span>
+        </a>
+      </div>
+
+      <div class="challenge-start-form">
+        <input type="number" class="question-count-input" placeholder="輸入題數" min="1" max="50">
+        <button class="start-button">
+          <span>開始挑戰&nbsp;</span>
+          <img src="img/Vector-12.png" alt="Arrow right">
+        </button>
+      </div>
+    </div>
+  </main>
+
+
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+  <div class="menu-dropdown" id="menuDropdown">
+
+    <div class="menu-header"></div>
+
+    <a href="home.html" class="menu-item">
+      <img src="img/Vector-16.png" alt="" class="menu-item-icon">
+      <span>首頁</span>
+  </a>
+
+  <a href="note.html" class="menu-item">
+      <img src="img/Vector-15.png" alt="" class="menu-item-icon">
+      <span>筆記</span>
+  </a>
+
+  <a href="user.html" class="menu-item">
+      <img src="img/Vector-33.png" alt="" class="menu-item-icon">
+      <span>使用者</span>
+  </a>
+
+  <a href="#" class="menu-item" onclick="logout()">
+      <img src="img/Vector-30.png" alt="" class="menu-item-icon">
+      <span>登出</span>
+  </a>
+  
+  </div>
+
+  <script src="JS/Difficulty.js"></script>
+  <script src="JS/main.js"></script>
+</body>
+
+</html>

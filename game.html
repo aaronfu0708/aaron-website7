@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        .game-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 5vw;
+            padding-top: 10vh;
+            gap: 40px;
+        }
+
+        .question-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .question-number {
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 800px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background:var(--text-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 20%;
+        }
+
+        .question-text {
+            color: var(--text-color);
+            font-size: 23px;
+            font-weight: 500;
+            margin: 0;
+            max-width: 900px;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 20px;
+        }
+
+        .answer-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            padding: 25px;
+            color: var(--text-color);
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .answer-option:hover::before {
+            left: 100%;
+        }
+
+        .answer-option:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .answer-option:active {
+            transform: translateY(0) scale(1);
+        }
+
+        .answer-option.selected {
+            background: linear-gradient(135deg, var(--accent-color-1), var(--accent-color-2));
+            border-color: var(--text-color);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .game-main {
+                padding: 5vh 5vw;
+                gap: 30px;
+            }
+
+            .question-container {
+                gap: 25px;
+            }
+
+            .question-number {
+                font-size: 20px;
+            }
+
+            .question-text {
+                font-size: 17px;
+            }
+
+            .answer-grid {
+                gap: 15px;
+                grid-template-columns: 1fr;
+
+            }
+
+            .answer-option {
+                padding: 18px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section id="header">
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="brand-name">NoteQ</div>
+                <button class="menu-button" aria-label="Toggle menu" onclick="toggleMenu()">
+                    <img src="img/Vector-18.png" alt="Menu Icon">
+                </button>
+            </div>
+        </header>
+    </section>
+
+    <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+    <div class="menu-dropdown" id="menuDropdown">
+  
+      <div class="menu-header"></div>
+  
+      <a href="home.html" class="menu-item">
+        <img src="img/Vector-16.png" alt="" class="menu-item-icon">
+        <span>首頁</span>
+    </a>
+
+    <a href="note.html" class="menu-item">
+        <img src="img/Vector-15.png" alt="" class="menu-item-icon">
+        <span>筆記</span>
+    </a>
+
+    <a href="user.html" class="menu-item">
+        <img src="img/Vector-33.png" alt="" class="menu-item-icon">
+        <span>使用者</span>
+    </a>
+
+    <a href="#" class="menu-item" onclick="logout()">
+        <img src="img/Vector-30.png" alt="" class="menu-item-icon">
+        <span>登出</span>
+    </a>
+    </div>
+
+    <main class="game-main">
+        <div class="question-container">
+            <h2 class="question-number">第 1 題 / 5</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            
+            <p class="question-text">判斷101-200之間有多少個質數,並輸出所有質數</p>
+            
+            <div class="answer-grid">
+                <div class="answer-option">
+                    A 10個
+                </div>
+                <div class="answer-option">
+                    B 17個
+                </div>
+                <div class="answer-option">
+                    C 13個
+                </div>
+                <div class="answer-option" >
+                    D 20個
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="JS/main.js"></script>
+</body>
+</html>

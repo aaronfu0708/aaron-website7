@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 60px;
+    max-width: 100%;
+    margin: 80px auto 0 auto;
+    position: relative;
+}
+.profile-column {
+    flex: none;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 450px;
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+    position: relative;
+    padding: 30px;
+}
+
+.profile-icon {
+    position: absolute;
+    top: 28px;
+    left: 75px;
+    width: 75px;
+    height: 60px;
+    z-index: 1;
+}
+
+.profile-name {
+    position: absolute;
+    font-size: 40px;
+    color: #fff;
+    letter-spacing: 5px;
+    top: 10px;
+    right: 20px;
+    z-index: 1;
+}
+
+.profile-card {
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    min-height: 600px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.profile-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    object-fit: cover;
+}
+
+.tab-container {
+    display: flex;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+    padding: 20px 30px;
+}
+
+.tab-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background: var(--color-text-dark);
+}
+
+.tab-panel {
+    display: none;
+    z-index: 1;
+    position: relative;
+    padding: 0 30px 30px 30px;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.personal-info {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-title {
+    font-size: 16px;
+    color: #fff;
+    margin: 0;
+    font-weight: 500;
+}
+
+.info-content {
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0;
+}
+
+.change-password-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 20px;
+    padding: 12px 24px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    align-self: flex-start;
+}
+
+.change-password-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.topics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.topics-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.topics-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.topics-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.topics-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.topic-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.topic-title {
+    font-size: 16px;
+    color: #fff;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.progress-label {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.progress-bar {
+    flex-grow: 1;
+    height: 8px;
+    background-color: #57588c;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: #a3d1ff;
+    border-radius: 4px;
+}
+
+.progress-percentage {
+    font-size: 14px;
+    color: #fff;
+    margin-left: 8px;
+}
+
+
+.subscription-column {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-top: 0px;
+    min-width: 320px;
+    margin-left: 20px;
+}
+
+.plan-card {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.plan-header {
+    border-radius: 50px;
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+
+.plan-header.current {
+    background-color: rgba(255,255,255,0.1);
+    padding: 18px 0;
+    width: 100%;
+}
+
+.plan-header.upgrade {
+    background-color: #001830;
+    padding: 18px 0;
+    width: 100%;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.feature-item img {
+    width: 20px;
+    height: 20px;
+}
+
+    @media (max-width: 768px) {
+        .dashboard-container {
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            max-width: 100%;
+            margin: 40px auto 0 auto;
+            padding: 0 20px;
+            padding-bottom: 60px;
+        }
+
+        .profile-column {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .profile-card {
+            max-width: 100%;
+            min-height: 500px;
+        }
+
+        .profile-icon {
+            top: 25px;
+            left: 60px;
+            width: 60px;
+            height: 50px;
+        }
+
+        .profile-name {
+            top: 10px;
+            right: 10px;
+            font-size: 32px;
+        }
+
+        .tab-container {
+            padding: 10px 20px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            font-size: 13px;
+        }
+
+        .tab-panel {
+            padding: 0 20px 20px 20px;
+        }
+
+
+        .info-item {
+            padding: 12px 0;
+        }
+
+        .info-title {
+            font-size: 14px;
+        }
+
+        .info-content {
+            font-size: 13px;
+        }
+
+        .topics-list {
+            gap: 20px;
+        }
+
+        .topic-item {
+            gap: 15px;
+            padding: 8px 0;
+        }
+
+        .topic-title {
+            font-size: 14px;
+        }
+
+        .progress-label {
+            font-size: 13px;
+        }
+
+        .progress-percentage {
+            font-size: 13px;
+        }
+
+        .subscription-column {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+            margin-left: 0;
+        }
+
+        .plan-card {
+            text-align: center;
+        }
+
+        .plan-header {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            gap: 15px;
+        }
+
+        .feature-item {
+            font-size: 16px;
+        }
+
+        .feature-item img {
+            width: 18px;
+            height: 18px;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    <section id="header">
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="brand-name">NoteQ</div>
+                <button class="menu-button" aria-label="Toggle menu" onclick="toggleMenu()">
+                    <img src="img/Vector-18.png" alt="Menu Icon">
+                </button>
+            </div>
+        </header>
+    </section>
+    <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+    <div class="menu-dropdown" id="menuDropdown">
+
+        <div class="menu-header">
+        </div>
+        <a href="home.html" class="menu-item">
+            <img src="img/Vector-16.png" alt="" class="menu-item-icon">
+            <span>首頁</span>
+        </a>
+
+        <a href="note.html" class="menu-item">
+            <img src="img/Vector-15.png" alt="" class="menu-item-icon">
+            <span>筆記</span>
+        </a>
+
+        <a href="user.html" class="menu-item">
+            <img src="img/Vector-33.png" alt="" class="menu-item-icon">
+            <span>使用者</span>
+        </a>
+
+        <a href="#" class="menu-item" onclick="logout()">
+            <img src="img/Vector-30.png" alt="" class="menu-item-icon">
+            <span>登出</span>
+        </a>
+    </div>
+    <section id="user-dashboard">
+  <div class="dashboard-container">
+    <div class="profile-column">
+             <div class="profile-card">
+         <img src="img/Vector-20.png" alt="Background" class="profile-bg">
+         <header class="profile-header">
+           <img src="img/Vector-35.png" alt="Chart Icon" class="profile-icon">
+           <h1 class="profile-name">Aaron</h1>
+         </header>
+         
+         <div class="tab-container">
+           <button class="tab-button active" onclick="switchTab('personal')">個人資料</button>
+           <button class="tab-button" onclick="switchTab('familiarity')">熟悉度</button>
+         </div>
+         
+         <div id="personal-tab" class="tab-panel active">
+           <div class="personal-info">
+             <div class="info-item">
+               <h3 class="info-title">電子郵件</h3>
+               <p class="info-content">aaron@example.com</p>
+             </div>
+             <div class="info-item">
+               <h3 class="info-title">註冊時間</h3>
+               <p class="info-content">2025年8月15日</p>
+             </div>
+             <div class="info-item">
+               <h3 class="info-title">學習時數</h3>
+               <p class="info-content">總計：4小時</p>
+             </div>
+             <button class="change-password-btn" onclick="changePassword()">更改密碼</button>
+           </div>
+         </div>
+        
+        <div id="familiarity-tab" class="tab-panel">
+          <div class="topics-list" style="max-height: 300px; overflow-y: auto;">
+            <div class="topic-item">
+              <h2 class="topic-title">累了</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">多益</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">數學</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">物理</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">累了</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">多益</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">數學</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+            <div class="topic-item">
+              <h2 class="topic-title">物理</h2>
+              <div class="progress-container">
+                <span class="progress-label">熟悉度：</span>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 45.28%;"></div>
+                </div>
+                <span class="progress-percentage">35%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subscription-column">
+      <article class="plan-card">
+        <div class="plan-header current">目前方案</div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <img src="img/Vector-22.png" alt="Feature icon">
+            <span>排行榜功能</span>
+          </li>
+          <li class="feature-item">
+            <img src="img/Vector-22.png" alt="Feature icon">
+            <span>免費生成10題</span>
+          </li>
+          <li class="feature-item">
+            <img src="img/Vector-22.png" alt="Feature icon">
+            <span>排行榜功能</span>
+          </li>
+          <li class="feature-item">
+            <img src="img/Vector-22.png" alt="Feature icon">
+            <span>免費生成10題</span>
+          </li>
+        </ul>
+      </article>
+
+      <article class="plan-card">
+        <div class="plan-header upgrade">升級PLUS</div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <img src="img/Vector-22.png" alt="Feature icon">
+            <span>訂閱即享更多功能</span>
+          </li>
+          <li class="feature-item">
+            <img src="img/Vector-22.png" alt="Feature icon">
+            <span>30NTD/月</span>
+          </li>
+          <li class="feature-item">
+            <img src="img/Vector-22.png" alt="Feature icon">
+            <span>訂閱即享更多功能</span>
+          </li>
+          <li class="feature-item">
+            <img src="img/Vector-22.png" alt="Feature icon">
+            <span>30NTD/月</span>
+          </li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+    <script src="JS/main.js"></script>
+    <script src="JS/user.js"></script>
+</body>
+</html>

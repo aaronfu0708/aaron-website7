@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+  .main-content {
+    padding-top: 66px;
+    padding-bottom: 100px;
+    max-width: 1100px;  
+    margin: 0 auto;   
+  }
+  
+  .filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 340px;
+    margin-bottom: 82px;
+  }
+
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .select-wrapper {
+    flex: 1;
+  }
+
+  .add-note-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 30px;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .add-note-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+    z-index: 0;
+  }
+
+  .add-note-button:hover::before {
+    left: 100%;
+  }
+
+  .add-note-button > * {
+    position: relative;
+    z-index: 1;
+  }
+
+
+
+  .add-note-button:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  }
+
+
+  
+  .filter-label {
+    font-size: 24px;
+    line-height: 34px;
+    color: var(--primary-text-light);
+  }
+  
+  .select-wrapper {
+    position: relative;
+    flex: 1;
+  }
+  
+  .custom-select {
+    width: 100%;
+    background-color: var(--select-bg);
+    border: 1px solid var(--select-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+    line-height: 16px;
+    color: var(--primary-text-light);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+
+  /* 自定義下拉選單容器 */
+  .custom-select-container {
+    position: relative;
+    width: 100%;
+  }
+
+  /* 自定義下拉選單 */
+  .custom-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: rgba(12, 11, 55, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--select-border);
+    border-radius: 8px;
+    margin-top: 4px;
+    z-index: 1000;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .custom-dropdown.active {
+    display: block;
+  }
+
+  .custom-dropdown-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    color: var(--primary-text-light);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+  }
+
+  .custom-dropdown-option:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .custom-dropdown-option.selected {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .option-text {
+    flex: 1;
+    padding-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .delete-option-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .delete-option-btn:hover {
+    opacity: 1;
+  }
+
+  .delete-option-btn img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+  }
+
+  /* 自定義滾動條樣式 */
+  /* Webkit瀏覽器 (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+  }
+
+  /* 特定元素的滾動條樣式 */
+  .note-text::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .note-text::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+
+  .note-text::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+  }
+
+  .note-text::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .custom-dropdown::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-dropdown::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  .custom-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
+
+  .custom-dropdown::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .modal-content::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .modal-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  .modal-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+
+  .modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-textarea::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .modal-textarea::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  .modal-textarea::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+
+  .modal-textarea::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Markdown 樣式 */
+  .note-text h1,
+  .note-text h2,
+  .note-text h3 {
+    margin: 16px 0 8px 0;
+    color: var(--primary-text-dark);
+    font-weight: 600;
+  }
+
+  .note-text h1 {
+    font-size: 20px;
+    border-bottom: 2px solid #001830;
+    padding-bottom: 4px;
+  }
+
+  .note-text h2 {
+    font-size: 18px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 2px;
+  }
+
+  .note-text h3 {
+    font-size: 16px;
+  }
+
+  .note-text strong {
+    font-weight: 600;
+    color: var(--primary-text-dark);
+  }
+
+  .note-text em {
+    font-style: italic;
+    color: var(--primary-text-dark);
+  }
+
+  .note-text code {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--primary-text-dark);
+  }
+
+  .note-text li {
+    margin: 4px 0;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .note-text li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--accent-color-1);
+    font-weight: bold;
+  }
+
+  /* 統一下拉選單樣式 - 深色透明模糊 */
+  .custom-select option {
+    background-color: rgba(12, 11, 55, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--primary-text-light);
+    padding: 8px 12px;
+    border: none;
+  }
+
+  /* Firefox 特定樣式 */
+  .custom-select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 var(--primary-text-light);
+  }
+
+  /* IE/Edge 特定樣式 */
+  .custom-select::-ms-expand {
+    display: none;
+  }
+
+  /* 確保在所有瀏覽器中都有深色背景 */
+  .custom-select:focus {
+    background-color: rgba(12, 11, 55, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--primary-text-light);
+    outline: none;
+    border-color: var(--accent-color-1);
+  }
+  
+  .select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+  }
+  
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 40px;
+  align-items: stretch;
+  max-width: 1100px;
+  margin: 0 auto;    
+}
+  
+  .note-card {
+    position: relative;
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: -6px 4px 4px 0px rgba(0, 0, 0, 0.8);
+    padding: 32px 20px 32px 23px;
+    height: 424px;
+    max-width: 340px ;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  .card-content {
+    color: var(--primary-text-dark);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .note-title {
+    font-size: 24px;
+    line-height: 1.2;
+    margin: 0 0 15px 0;
+  }
+  
+  .note-text {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.2;
+    margin: 0 0 15px 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 280px;
+    padding-right: 8px;
+  }
+  
+  .note-answer {
+    margin-top: 20px;
+  }
+  
+  .add-button {
+        align-self: flex-end;
+        margin-top: 16px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+  .generate-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        margin-bottom: 2px;
+      }
+  .generate-button:hover .arrow-up,
+  .generate-button:hover .generate-text {
+        color: #888888;
+      }
+  .generate-text {
+        color: #001830;
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+  .arrow-up {
+        font-size: 20px;
+        color: #333;
+        line-height: 1;
+      }
+  .add-plus {
+        width: 36px;
+        height: 36px;
+        background: #001830;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .add-plus::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+        z-index: 0;
+      }
+
+      .add-plus:hover::before {
+        left: 100%;
+      }
+
+      .add-plus > * {
+        position: relative;
+        z-index: 1;
+      }
+
+
+
+  .add-plus img {
+        width: 15px;
+        height: 15px;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+      }
+
+  .add-plus:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  }
+  .action-bar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--color-button-primary);
+    border-radius: 25px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: scaleX(0) translateX(20px);
+    transform-origin: right center;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 10;
+  }
+
+  .action-bar.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scaleX(1) translateX(0);
+  }
+
+  .action-item {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .action-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+    z-index: 0;
+  }
+
+  .action-item:hover::before {
+    left: 100%;
+  }
+
+  .action-item > * {
+    position: relative;
+    z-index: 1;
+  }
+
+
+
+  .action-item:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  }
+
+  .action-plus {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+
+  .action-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .action-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--primary-text-light);
+  }
+
+  .empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+
+  .empty-state h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .empty-state p {
+    font-size: 16px;
+    opacity: 0.8;
+    line-height: 1.5;
+  }
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    color: #333;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: #f5f5f5;
+    color: #333;
+  }
+
+  .modal-body {
+    margin-bottom: 20px;
+  }
+
+  .modal-textarea {
+    width: 100%;
+    min-height: 400px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 1.6;
+    font-family: 'Courier New', monospace;
+    resize: vertical;
+  }
+
+  .modal-textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .modal-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+    z-index: 0;
+  }
+
+  .modal-btn:hover::before {
+    left: 100%;
+  }
+
+  .modal-btn > * {
+    position: relative;
+    z-index: 1;
+  }
+
+
+
+  .modal-btn-primary {
+    background: var(--color-button-primary);
+    color: white;
+  }
+
+  .modal-btn-primary:hover {
+    background: var(--color-button-primary-hover);
+    color: black;
+  }
+
+  .modal-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: black;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .modal-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: black;
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 搬移模態框下拉選單樣式 */
+  .move-custom-select-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .move-custom-select {
+    width: 100%;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 16px;
+    line-height: 1.2;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .move-custom-select:hover {
+    border-color: #001830;
+    box-shadow: 0 4px 12px rgba(0, 24, 48, 0.1);
+  }
+
+  .move-select-arrow {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+  }
+
+  .move-custom-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    margin-top: 8px;
+    z-index: 1000;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .move-custom-dropdown.active {
+    display: block;
+  }
+
+  .move-dropdown-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    border-radius: 8px;
+    margin: 2px 4px;
+    font-size: 16px;
+  }
+
+  .move-dropdown-option:hover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+
+  .move-dropdown-option.selected {
+    background: #001830;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 24, 48, 0.3);
+  }
+
+  .move-option-text {
+    flex: 1;
+  }
+  
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding-top: 50px;
+        padding-bottom: 60px;
+        max-width: 100%;
+        margin: 0 20px;
+      }
+
+      .filter-container {
+        max-width: 100%;
+        margin-bottom: 40px;
+      }
+
+      .filter-label {
+        font-size: 20px;
+        line-height: 28px;
+      }
+
+      .custom-select {
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+
+      .custom-dropdown-option {
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+
+      .delete-option-btn img {
+        width: 14px;
+        height: 14px;
+      }
+
+      /* 手機版滾動條樣式 */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      /* 手機版特定元素滾動條 */
+      .note-text::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      .note-text::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 2px;
+      }
+
+      .note-text::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 2px;
+      }
+
+      .note-text::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      .custom-dropdown::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      .custom-dropdown::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+      }
+
+      .custom-dropdown::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+      }
+
+      .custom-dropdown::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      .modal-content::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .modal-content::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+      }
+
+      .modal-content::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+      }
+
+      .modal-content::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-textarea::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .modal-textarea::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+      }
+
+      .modal-textarea::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+      }
+
+      .modal-textarea::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      /* 手機版 Markdown 樣式 */
+      .note-text h1 {
+        font-size: 18px;
+        margin: 12px 0 6px 0;
+      }
+
+      .note-text h2 {
+        font-size: 16px;
+        margin: 10px 0 5px 0;
+      }
+
+      .note-text h3 {
+        font-size: 14px;
+        margin: 8px 0 4px 0;
+      }
+
+      .note-text code {
+        font-size: 12px;
+        padding: 1px 4px;
+      }
+
+      .note-text li {
+        margin: 3px 0;
+        padding-left: 12px;
+      }
+
+      .notes-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .note-card {
+        padding: 24px 16px 24px 18px;
+        height: 350px;
+        min-width: 320px !important;
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      .note-title {
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
+
+      .note-text {
+        font-size: 14px;
+        margin-bottom: 12px;
+        flex-grow: 1;
+        overflow-y: auto;
+        max-height: 200px;
+        padding-right: 8px;
+      }
+
+      .add-button {
+        margin-top: 12px;
+      }
+
+      .add-plus {
+        font-size: 1.2rem;
+        padding: 23px 23px;
+      }
+
+      .action-bar {
+        padding: 13px 20px;
+        gap: 15px;
+      }
+
+      .action-item {
+        font-size: 14px;
+        padding: 2px 6px;
+      }
+
+      .action-plus {
+        font-size: 16px;
+        padding: 3px 6px;
+      }
+
+      .add-note-button{
+        font-size: 13px;
+      }
+      .generate-text {
+        margin-bottom: 5px;
+      }
+      .modal-content {
+        margin: 20px;
+        max-width: calc(100% - 40px);
+        max-height: calc(90% - 40px);
+      }
+
+      .modal-textarea {
+        min-height: 200px;
+      }
+    }
+
+    </style>
+</head>
+<body>
+  <section id="header">
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="brand-name">NoteQ</div>
+            <button class="menu-button" aria-label="Toggle menu" onclick="toggleMenu()">
+              <img src="img/Vector-18.png" alt="Menu Icon">
+            </button>
+        </div>
+    </header>
+  </section>
+      <main id="section-main" class="main-content">
+        <div class="filter-container">
+          <label for="subject-select" class="filter-label">選擇主題</label>
+            <div class="filter-row">
+              <div class="select-wrapper">
+                <div class="custom-select-container">
+                  <div class="custom-select" id="custom-select" onclick="toggleCustomDropdown()">
+                    <span id="selected-option-text">數學</span>
+                  </div>
+                  <img src="img/Vector-17.png" class="select-arrow" onclick="toggleCustomDropdown()">
+                  <div class="custom-dropdown" id="custom-dropdown">
+                    <button class="custom-dropdown-option selected" data-value="math">
+                      <span class="option-text">數學</span>
+                      <button class="delete-option-btn" onclick="deleteSubject('math', event)">
+                        <img src="img/Vector-25.png" alt="刪除">
+                      </button>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            <button class="add-note-button" onclick="addNewNote()">新增筆記</button>
+          </div>
+
+        </div>
+      
+        <div class="notes-grid" id="notesGrid">
+        </div>
+        
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <div class="empty-icon">
+            <img src="img/Vector-32.png" alt="筆記">
+          </div>
+          <h3>還沒有筆記</h3>
+          <p>點擊「新增筆記」開始記錄你的學習筆記吧！</p>
+        </div>
+      </main>
+      <div class="action-backdrop" id="actionBackdrop" onclick="closeAllActionBars()"></div>
+
+      <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+      <div class="menu-dropdown" id="menuDropdown">
+        
+        <div class="menu-header">
+        </div>
+        <a href="home.html" class="menu-item">
+          <img src="img/Vector-16.png" alt="" class="menu-item-icon">
+          <span>首頁</span>
+      </a>
+
+      <a href="note.html" class="menu-item">
+          <img src="img/Vector-15.png" alt="" class="menu-item-icon">
+          <span>筆記</span>
+      </a>
+
+      <a href="user.html" class="menu-item">
+          <img src="img/Vector-33.png" alt="" class="menu-item-icon">
+          <span>使用者</span>
+      </a>
+
+      <a href="#" class="menu-item" onclick="logout()">
+          <img src="img/Vector-30.png" alt="" class="menu-item-icon">
+          <span>登出</span>
+      </a>
+      </div>
+      <script src="JS/main.js"></script>
+      <script src="JS/note.js"></script>
+
+</body>
+</html>
