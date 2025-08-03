@@ -218,7 +218,7 @@ function renderNotes() {
     if (!container) return;
     
     if (!currentSubject || subjects.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: gray;">尚未建立任何主題，請先新增主題。</p>';
+        container.innerHTML = '<p style="text-align: center; color: gray;">尚未建立任何主題，請新增主題。</p>';
         return;
     }
     
@@ -257,7 +257,7 @@ function renderNotes() {
         
         if (emptyIcon) emptyIcon.src = 'img/Vector-32.png';
         if (emptyTitle) emptyTitle.textContent = '還沒有主題';
-        if (emptyDesc) emptyDesc.textContent = '請先新增主題，然後開始記錄你的學習筆記吧！';
+        if (emptyDesc) emptyDesc.textContent = '請新增主題，然後開始記錄你的學習筆記吧！';
         return;
     }
     
@@ -375,7 +375,7 @@ function closeAllActionBars() {
 function addNewNote() {
     // 檢查是否有主題
     if (!currentSubject || subjects.length === 0) {
-        safeAlert('請先新增主題！');
+        safeAlert('請新增主題！');
         return;
     }
     
