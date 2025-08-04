@@ -54,6 +54,34 @@
             letter-spacing: 2.4px;
             text-align: center;
             max-width: 45%;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .typewriter-text {
+            position: relative;
+            display: inline-block;
+            white-space: pre-line;
+            text-align: center;
+        }
+
+        .typewriter-text::after {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 2px;
+            background-color: var(--text-color);
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 45% { opacity: 1; }
+            46%, 100% { opacity: 0; }
         }
 
         .cta-button {
@@ -163,6 +191,7 @@
                 letter-spacing: 1.8px;
                 text-align: center;
                 max-width: 90%;
+                min-height: 60px;
             }
 
             .cta-button {
@@ -206,9 +235,9 @@
             <canvas id="orbCanvas" class="orb-canvas"></canvas>
         </div>
         <div class="container hero-container">
-            <p class="hero-description">
-                NoteQ智能學習平台<br>
-                學習更有效率，筆記更有條理</p>
+            <div class="hero-description">
+                <div class="typewriter-text" id="typewriterText"></div>
+            </div>
             <a href="home.html" class="cta-button">
                 <span class="cta-text">START</span>
                 <span class="arrow-icon-wrapper">
