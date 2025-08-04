@@ -2078,7 +2078,7 @@ function initScrollStack(container) {
         itemDistance: 60,  // 增加卡片間距，減少重疊
         itemScale: 0.02,   // 減少縮放效果，減少晃動
         itemStackDistance: 10,  // 減少堆疊距離，增加重疊效果
-        stackPosition: '6%',   // 調整堆疊位置
+        stackPosition: '0',   // 調整堆疊位置
         scaleEndPosition: '1', // 調整縮放結束位置
         baseScale: 0.9,   // 提高基礎縮放，減少極端變化
         rotationAmount: 0,
