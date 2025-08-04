@@ -381,7 +381,7 @@ function updateFavoriteNoteSelect() {
         } else {
             // 如果沒有筆記，顯示提示
             const noNoteOption = document.createElement('div');
-            noNoteOption.style.cssText = 'padding: 14px 18px; color: #999; font-style: italic; text-align: center;';
+            noNoteOption.style.cssText = 'padding: 14px 18px; color: #999; text-align: center;';
             noNoteOption.textContent = '該主題下暫無筆記';
             dropdown.appendChild(noNoteOption);
         }
