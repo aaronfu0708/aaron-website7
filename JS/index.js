@@ -396,3 +396,80 @@
                 new Orb(canvas, orbConfig);
             }
         });
+
+        // 打字機效果實現
+        class Typewriter {
+            constructor(element, text, options = {}) {
+                this.element = element;
+                this.text = text;
+                this.currentCharIndex = 0;
+                this.isDeleting = false;
+                
+                // 預設選項
+                this.options = {
+                    typeSpeed: options.typeSpeed || 100,
+                    deleteSpeed: options.deleteSpeed || 50,
+                    waitTime: options.waitTime || 2000,
+                    loop: options.loop !== false,
+                    ...options
+                };
+                
+                this.start();
+            }
+            
+            start() {
+                this.type();
+            }
+            
+            type() {
+                if (this.isDeleting) {
+                    // 刪除模式
+                    this.currentCharIndex--;
+                    this.element.textContent = this.text.substring(0, this.currentCharIndex);
+                    
+                    if (this.currentCharIndex === 0) {
+                        this.isDeleting = false;
+                        setTimeout(() => this.type(), 800);
+                        return;
+                    }
+                    
+                    setTimeout(() => this.type(), this.options.deleteSpeed);
+                } else {
+                    // 打字模式
+                    this.currentCharIndex++;
+                    this.element.textContent = this.text.substring(0, this.currentCharIndex);
+                    
+                    if (this.currentCharIndex === this.text.length) {
+                        // 完成當前文字
+                        if (this.options.loop) {
+                            setTimeout(() => {
+                                this.isDeleting = true;
+                                this.type();
+                            }, this.options.waitTime);
+                        }
+                        return;
+                    }
+                    
+                    // 隨機化打字速度，使其更自然
+                    const randomDelay = this.options.typeSpeed + Math.random() * 30;
+                    setTimeout(() => this.type(), randomDelay);
+                }
+            }
+        }
+        
+        // 頁面載入完成後啟動打字機效果
+        document.addEventListener('DOMContentLoaded', () => {
+            const typewriterElement = document.getElementById('typewriterText');
+            
+            if (typewriterElement) {
+                // 將兩行文字合併為一個字串，用換行符分隔
+                const fullText = "NoteQ智能學習平台\n學習更有效率，筆記更有條理";
+                
+                new Typewriter(typewriterElement, fullText, {
+                    typeSpeed: 50,
+                    deleteSpeed: 50,
+                    waitTime: 1500,
+                    loop: true
+                });
+            }
+        });
